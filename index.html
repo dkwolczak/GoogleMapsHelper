@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>  
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+    
+    
+    
+    
+    
+    
+    <style>
+
+	#map {
+		width: 100%;
+		height: 600px;
+	}
+	
+	#buttons {
+		position: relative;
+		background-color: #fff;
+		padding: 5px;
+		border: 1px solid #999;
+		text-align: center;
+	}
+	
+</style>
+
+<script>
+       		
+	
+	
+	/* 
+	
+		This example uses a GroundOverlay to place an image on Google Maps, such as the lower floor plan of waterworth
+		
+		STEPS TO ACHIEVE OVERLAYING AN IMAGE ON A MAP
+	
+		1. Preview this page in a browser and zoom in as close as possible to the building you wish to design. Take a screen grab.
+		2. Use an image-editing software to paste your image and crop your screen grab to just the building.
+		3. Apply your graphical design on top of it (tip: don't forget to design using layers!).
+		4. Save the image out as a transparent .PNG and upload to server.
+		5. Use helper rectangle on this page to get North-East-South-West points of the building to overlay the image on. Resize the rectangle to fit around the area that your design includes.
+		6. Replicate code below to apply image on Google Maps, using the helper rectangle co-ordinates.
+	
+	*/
+	
+	var waterworthLower;
+	
+	var rectangle;
+	
+	var infoWindow;
+	
+	var map;
+	
+	function initMap() {
+		
+		/********************/
+		/*SET UP GOOGLE MAPS*/
+		/********************/
+		
+		map = new google.maps.Map( document.getElementById( 'map' ), { 
+			zoom: 17, 
+			center: { lat: 50.061707, lng: 19.937000 }
+		} );
+		
+		
+		/*****************************************************/
+		/*HELPER FUNCTION TO GET NORTH-EAST-SOUTH-WEST POINTS*/
+		/*****************************************************/
+			
+		var rectangleBounds = {
+			north: 50.06247839462182,
+			south: 50.06105802461653,
+			east: 19.93851994088743,
+			west: 19.936356269836438
+		};
+			
+		//define the rectangle and set its editable property to true.
+		rectangle = new google.maps.Rectangle( { bounds: rectangleBounds, editable: true, draggable: true } );
+		
+		//assign the rectangle to the map
+		rectangle.setMap( map );
+
+		//add an event listener on the rectangle.
+		rectangle.addListener( 'bounds_changed', showNewBounds );
+		
+		
+		
+		/*********************************************/
+		/*HELPER INFO WINDOW TO DISPLAY LAT AND LON  */ 
+		/*OF ANY LOCATION WHEN GOOGLE MAPS IS CLICKED*/
+		/*********************************************/
+		
+		//define an info window on the map
+		infoWindow = new google.maps.InfoWindow();
+		
+		//assign a click event to google maps
+		google.maps.event.addListener( map, 'click', function( e ) {
+			
+			//set the info window's content
+			infoWindow.setContent( e.latLng.toString() );
+			
+			//set the info window's position. 
+			infoWindow.setPosition( e.latLng );
+			
+			//open the info window
+			infoWindow.open( map );
+			
+		});
+	
+	}
+		
+	//show the latlon of the helper rectangle in an info window
+	function showNewBounds( event ) {
+		
+		//get the NORTH-EAST location and the SOUTH-WEST location of rectangle
+		var ne = rectangle.getBounds().getNorthEast();
+		var sw = rectangle.getBounds().getSouthWest();
+		
+		//construct a string to display this information in the info window
+		var contentString = 
+		'<b>Building bounds</b><br>' + 
+		'New north-east corner: ' + ne.lat() + ', ' + ne.lng() + '<br>' + 
+		'New south-west corner: ' + sw.lat() + ', ' + sw.lng();
+	
+		//set the info window's content and position
+		infoWindow.setContent( contentString );
+		infoWindow.setPosition( ne );
+	
+		//add the info window to the map
+		infoWindow.open( map );
+		
+	}
+	
+	//add a given overlay
+	function addOverlay( overlay ) {
+		
+		//add the overlay
+		overlay.setMap( map );
+		
+	}
+	
+	//remove a given overlay	
+	function removeOverlay( overlay ) {
+		
+		//remove the overlay	
+		overlay.setMap( null );
+		
+	}
+	
+	
+	/****************************************************/
+	/*HELPER FUNCTION TO ENSURE GOOGLE MAPS APPEARS WHEN*/ 
+	/*USING JQUERY MOBILE; SPECIFICALLY WHEN USER CLICKS*/
+	/*A BUTTON AND GOES TO A PAGE WITH GOOGLE MAPS ON   */
+	/****************************************************/
+	
+	//wait until the map page is shown
+	$( document ).on( "pageshow", "#map-page", function() {
+		
+		//initialise Google Map API function		 
+		initMap();
+			
+	});
+
+</script>
+
+<script src="YourGoogleMapsAPIKey goes here" async defer></script>
+
+
+    
+    </head>
+   
+    
+    <body>
+        <div class="container">
+        <h1>Google Maps Coordinates Helper</h1>
+            <h2>About</h2>
+            <p>I'm currentely developing a interactive project involving google maps. To help with Image overlay co-ordinates, I developed this application. Feel free to use it to help you!</p>
+            <h2>Instructions</h2>
+            <p>Drag the square to get co-ordinates</p>
+                 	
+            <div id="map">
+            
+            </div>
+        </div>
+        
+    </body>
+    
+    <footer>
+        <hr style="border: 1px #D0D0D0;" />
+        <p style="text-align: center; padding-top: 10px;">Copyright © Dominik Kwolczak 2019</p>
+    </footer>
+    
+
+
+
+</html>
