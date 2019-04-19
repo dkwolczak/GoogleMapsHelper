@@ -3,8 +3,13 @@
 ## About
 This app is aimed at people developing image overlays for Google Maps. It will help you find the required Coordinates.
 
+## You will need
+Google Maps API ( Insert key in <script src="https://maps.googleapis.com/maps/api/js?key=YourAPI key goes here" async defer></script> )
+
 ## How to use
 Drag the box to required location to get coordinates. The map defaults to Krakow Old Town in Poland but feel free to drag it anywhare in the world!
+
+
 
 ## Licence
 
