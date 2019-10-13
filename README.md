@@ -36,4 +36,4 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ## Live version
-The live version can be found here: http://gmaphelper.dominikkwolczak.me/
+The live version can be found here: https://gmaphelper.projects.dominikkwolczak.me/
